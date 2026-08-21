@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PatientLoginForm from '../../components/auth/PatientLoginForm';
 import OTPVerification from '../../components/auth/OTPVerification';
-import { mockPatient } from '../../data/patientMockData';
+import { supabase } from '../../lib/supabaseClient';
 
 const PatientLogin = () => {
   const [step, setStep] = useState(1);
@@ -10,38 +10,87 @@ const PatientLogin = () => {
   const [error, setError] = useState('');
   const [attemptsLeft, setAttemptsLeft] = useState(3);
   const [success, setSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSendOTP = (enteredMobile) => {
+  const handleSendOTP = async (enteredMobile) => {
     setError('');
-    if (enteredMobile !== mockPatient.mobile) {
-      setError("Patient account not found.");
+    setIsLoading(true);
+    
+    const formattedMobile = '+91' + enteredMobile;
+    
+    const { error: signInError } = await supabase.auth.signInWithOtp({
+      phone: formattedMobile
+    });
+
+    setIsLoading(false);
+
+    if (signInError) {
+      setError(signInError.message || "Failed to send OTP. Please try again.");
       return;
     }
+
     setMobile(enteredMobile);
     setStep(2);
   };
 
-  const handleVerifyOTP = (enteredOtp) => {
-    if (enteredOtp === mockPatient.otp && mobile === mockPatient.mobile) {
-      // Success
+  const handleVerifyOTP = async (enteredOtp) => {
+    setError('');
+    setIsLoading(true);
+    
+    const formattedMobile = '+91' + mobile;
+
+    const { data, error: verifyError } = await supabase.auth.verifyOtp({
+      phone: formattedMobile,
+      token: enteredOtp,
+      type: 'sms'
+    });
+
+    if (verifyError) {
+      setIsLoading(false);
+      setAttemptsLeft(prev => prev - 1);
+      setError("OTP verification failed. Please check the OTP and try again.");
+      return;
+    }
+
+    if (data?.session) {
       setSuccess(true);
-      setError('');
-      localStorage.setItem("patientAuthenticated", "true");
-      localStorage.setItem("patientId", mockPatient.patientId);
       
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', data.user.id)
+        .maybeSingle();
+
       setTimeout(() => {
-        const hasProfile = localStorage.getItem("patientProfile");
-        if (hasProfile) {
+        setIsLoading(false);
+        if (profile) {
           navigate('/patient/dashboard');
         } else {
           navigate('/patient/details');
         }
       }, 1500);
     } else {
-      // Failed
-      setAttemptsLeft(prev => prev - 1);
-      setError("Incorrect OTP. Please check the OTP and try again.");
+      setIsLoading(false);
+      setError("An unexpected error occurred.");
+    }
+  };
+
+  const handleResendOTP = async () => {
+    if (!mobile) return;
+    setError('');
+    setIsLoading(true);
+    
+    const formattedMobile = '+91' + mobile;
+    
+    const { error: signInError } = await supabase.auth.signInWithOtp({
+      phone: formattedMobile
+    });
+
+    setIsLoading(false);
+
+    if (signInError) {
+      setError(signInError.message || "Failed to resend OTP. Please try again.");
     }
   };
 
@@ -65,14 +114,16 @@ const PatientLogin = () => {
         </div>
       ) : (
         step === 1 ? (
-          <PatientLoginForm onSubmit={handleSendOTP} error={error} />
+          <PatientLoginForm onSubmit={handleSendOTP} error={error} isLoading={isLoading} />
         ) : (
           <OTPVerification 
             mobile={mobile} 
             onVerify={handleVerifyOTP} 
             onReset={handleReset} 
+            onResend={handleResendOTP}
             error={error} 
             attemptsLeft={attemptsLeft} 
+            isLoading={isLoading}
           />
         )
       )}

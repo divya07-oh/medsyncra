@@ -1,9 +1,24 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Logo from '../Logo';
 
-const OTPVerification = ({ mobile, onVerify, onReset, error, attemptsLeft }) => {
+const OTPVerification = ({ mobile, onVerify, onReset, error, attemptsLeft, isLoading, onResend }) => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
+  const [cooldown, setCooldown] = useState(60);
   const inputRefs = useRef([]);
+
+  useEffect(() => {
+    if (cooldown > 0) {
+      const timerId = setTimeout(() => setCooldown(cooldown - 1), 1000);
+      return () => clearTimeout(timerId);
+    }
+  }, [cooldown]);
+
+  const handleResend = () => {
+    if (cooldown === 0 && onResend) {
+      onResend();
+      setCooldown(60);
+    }
+  };
 
   const handleChange = (e, index) => {
     const value = e.target.value;
@@ -76,8 +91,7 @@ const OTPVerification = ({ mobile, onVerify, onReset, error, attemptsLeft }) => 
         </p>
 
         <div style={{ backgroundColor: '#e0f2fe', color: '#0369a1', padding: '12px', borderRadius: '8px', marginBottom: '24px', fontSize: '13px', textAlign: 'center' }}>
-          OTP sent to {maskMobile(mobile)}<br/>
-          <strong>Demo OTP: 123456</strong>
+          OTP sent to {maskMobile(mobile)}
         </div>
 
         {error && (
@@ -102,25 +116,50 @@ const OTPVerification = ({ mobile, onVerify, onReset, error, attemptsLeft }) => 
                 style={{ 
                   width: '45px', 
                   height: '56px', 
-                  textAlign: 'center', 
                   fontSize: '24px', 
-                  fontWeight: '600',
-                  border: `2px solid ${digit ? 'var(--main-blue)' : 'var(--border)'}`, 
+                  textAlign: 'center', 
+                  border: '1px solid var(--border)', 
                   borderRadius: '8px', 
                   outline: 'none',
                   color: 'var(--text-main)',
-                  transition: 'border-color 0.2s'
+                  opacity: isLoading ? 0.6 : 1
                 }}
               />
             ))}
           </div>
 
-          <button type="submit" className="btn btn-primary w-full" style={{ padding: '14px', fontSize: '16px', marginBottom: '24px' }}>
-            {error ? 'Try Again' : 'Verify OTP'}
+          <button 
+            type="submit" 
+            disabled={isLoading || otp.join('').length !== 6} 
+            className="btn btn-primary w-full" 
+            style={{ 
+              padding: '14px', 
+              fontSize: '16px', 
+              marginBottom: '16px',
+              opacity: (isLoading || otp.join('').length !== 6) ? 0.7 : 1,
+              cursor: (isLoading || otp.join('').length !== 6) ? 'not-allowed' : 'pointer'
+            }}
+          >
+            {isLoading ? 'Verifying...' : 'Verify OTP'}
           </button>
-
-          <div style={{ textAlign: 'center', fontSize: '14px', color: 'var(--text-secondary)' }}>
-            Didn't receive the OTP? <button type="button" onClick={onReset} style={{ background: 'none', border: 'none', color: 'var(--main-blue)', fontWeight: '600', cursor: 'pointer', padding: 0 }}>Resend OTP</button>
+          
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center' }}>
+            <button 
+              type="button" 
+              disabled={cooldown > 0 || isLoading} 
+              onClick={handleResend}
+              style={{ background: 'none', border: 'none', color: cooldown > 0 ? 'var(--text-secondary)' : 'var(--main-blue)', fontSize: '14px', cursor: cooldown > 0 || isLoading ? 'not-allowed' : 'pointer' }}
+            >
+              {cooldown > 0 ? `Resend OTP in ${cooldown}s` : 'Resend OTP'}
+            </button>
+            <button 
+              type="button" 
+              onClick={onReset}
+              disabled={isLoading}
+              style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', fontSize: '13px', cursor: isLoading ? 'not-allowed' : 'pointer' }}
+            >
+              Change mobile number
+            </button>
           </div>
         </form>
       </div>

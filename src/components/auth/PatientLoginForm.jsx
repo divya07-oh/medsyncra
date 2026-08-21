@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Logo from '../Logo';
 
-const PatientLoginForm = ({ onSubmit, error }) => {
+const PatientLoginForm = ({ onSubmit, error, isLoading }) => {
   const [mobile, setMobile] = useState('');
   const [localError, setLocalError] = useState('');
 
@@ -50,12 +50,15 @@ const PatientLoginForm = ({ onSubmit, error }) => {
                 value={mobile}
                 onChange={(e) => setMobile(e.target.value.replace(/\D/g, '').slice(0, 10))}
                 placeholder="Enter 10-digit number"
-                style={{ flex: 1, padding: '12px 16px', border: 'none', outline: 'none', fontSize: '16px', color: 'var(--text-main)' }}
+                style={{ flex: 1, padding: '12px 16px', border: 'none', outline: 'none', fontSize: '16px', color: 'var(--text-main)', opacity: isLoading ? 0.6 : 1 }}
+                disabled={isLoading}
               />
             </div>
           </div>
           
-          <button type="submit" className="btn btn-primary w-full" style={{ padding: '14px', fontSize: '16px', marginBottom: '16px' }}>Send OTP</button>
+          <button type="submit" disabled={isLoading} className="btn btn-primary w-full" style={{ padding: '14px', fontSize: '16px', marginBottom: '16px', opacity: isLoading ? 0.7 : 1, cursor: isLoading ? 'not-allowed' : 'pointer' }}>
+            {isLoading ? 'Sending...' : 'Send OTP'}
+          </button>
           
           <p style={{ fontSize: '12px', color: 'var(--text-secondary)', textAlign: 'center' }}>
             Your mobile number is used only to verify your identity.

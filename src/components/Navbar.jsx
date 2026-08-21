@@ -29,7 +29,7 @@ const Navbar = () => {
 
         <div className="nav-actions">
           <button className="btn btn-secondary" onClick={() => navigate('/patient/login')}>Patient Login</button>
-          <button className="btn btn-primary">Doctor Login</button>
+          <button className="btn btn-primary" onClick={() => navigate('/doctor/login')}>Doctor Login</button>
         </div>
 
         <button 
@@ -47,7 +47,7 @@ const Navbar = () => {
           <a href="#features" className="nav-link" onClick={closeMenu}>Features</a>
           <a href="#safety" className="nav-link" onClick={closeMenu}>Safety</a>
           <button className="btn btn-secondary w-full" onClick={() => { closeMenu(); navigate('/patient/login'); }}>Patient Login</button>
-          <button className="btn btn-primary w-full" onClick={closeMenu}>Doctor Login</button>
+          <button className="btn btn-primary w-full" onClick={() => { closeMenu(); navigate('/doctor/login'); }}>Doctor Login</button>
         </div>
       </div>
     </nav>
