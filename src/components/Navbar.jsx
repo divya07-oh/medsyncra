@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import Logo from './Logo';
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -26,7 +28,7 @@ const Navbar = () => {
         </div>
 
         <div className="nav-actions">
-          <button className="btn btn-secondary">Patient Login</button>
+          <button className="btn btn-secondary" onClick={() => navigate('/patient/login')}>Patient Login</button>
           <button className="btn btn-primary">Doctor Login</button>
         </div>
 
@@ -44,7 +46,7 @@ const Navbar = () => {
           <a href="#how-it-works" className="nav-link" onClick={closeMenu}>How It Works</a>
           <a href="#features" className="nav-link" onClick={closeMenu}>Features</a>
           <a href="#safety" className="nav-link" onClick={closeMenu}>Safety</a>
-          <button className="btn btn-secondary w-full" onClick={closeMenu}>Patient Login</button>
+          <button className="btn btn-secondary w-full" onClick={() => { closeMenu(); navigate('/patient/login'); }}>Patient Login</button>
           <button className="btn btn-primary w-full" onClick={closeMenu}>Doctor Login</button>
         </div>
       </div>

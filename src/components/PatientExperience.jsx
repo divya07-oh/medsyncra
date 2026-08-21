@@ -1,8 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Check } from 'lucide-react';
 import PatientDashboardPreview from './PatientDashboardPreview';
 
 const PatientExperience = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="section">
       <div className="container experience-layout">
@@ -35,7 +38,7 @@ const PatientExperience = () => {
             </li>
           </ul>
           
-          <button className="btn btn-primary">Patient Login</button>
+          <button className="btn btn-primary" onClick={() => navigate('/patient/login')}>Patient Login</button>
         </div>
         
         <div className="experience-visual">
