@@ -17,63 +17,41 @@ const PatientLogin = () => {
     setError('');
     setIsLoading(true);
     
-    const formattedMobile = '+91' + enteredMobile;
-    
-    const { error: signInError } = await supabase.auth.signInWithOtp({
-      phone: formattedMobile
-    });
-
-    setIsLoading(false);
-
-    if (signInError) {
-      setError(signInError.message || "Failed to send OTP. Please try again.");
-      return;
-    }
-
-    setMobile(enteredMobile);
-    setStep(2);
+    // Mock API call for demo
+    setTimeout(() => {
+      setIsLoading(false);
+      setMobile(enteredMobile);
+      setStep(2);
+    }, 1000);
   };
 
   const handleVerifyOTP = async (enteredOtp) => {
     setError('');
     setIsLoading(true);
     
-    const formattedMobile = '+91' + mobile;
-
-    const { data, error: verifyError } = await supabase.auth.verifyOtp({
-      phone: formattedMobile,
-      token: enteredOtp,
-      type: 'sms'
-    });
-
-    if (verifyError) {
-      setIsLoading(false);
-      setAttemptsLeft(prev => prev - 1);
-      setError("OTP verification failed. Please check the OTP and try again.");
-      return;
-    }
-
-    if (data?.session) {
+    // Mock API call for demo
+    setTimeout(() => {
       setSuccess(true);
       
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('id', data.user.id)
-        .maybeSingle();
+      // Setup mock authentication session
+      localStorage.setItem("patientAuthenticated", "true");
+      
+      // Inject mock profile if none exists
+      if (!localStorage.getItem("patientProfile")) {
+        localStorage.setItem("patientProfile", JSON.stringify({
+          fullName: "Divya V",
+          patientId: "PT-001",
+          dateOfBirth: "15 May 1990",
+          gender: "Female",
+          bloodGroup: "O+"
+        }));
+      }
 
       setTimeout(() => {
         setIsLoading(false);
-        if (profile) {
-          navigate('/patient/dashboard');
-        } else {
-          navigate('/patient/details');
-        }
-      }, 1500);
-    } else {
-      setIsLoading(false);
-      setError("An unexpected error occurred.");
-    }
+        navigate('/patient/dashboard');
+      }, 1000);
+    }, 1500);
   };
 
   const handleResendOTP = async () => {
@@ -81,17 +59,10 @@ const PatientLogin = () => {
     setError('');
     setIsLoading(true);
     
-    const formattedMobile = '+91' + mobile;
-    
-    const { error: signInError } = await supabase.auth.signInWithOtp({
-      phone: formattedMobile
-    });
-
-    setIsLoading(false);
-
-    if (signInError) {
-      setError(signInError.message || "Failed to resend OTP. Please try again.");
-    }
+    // Mock API call for demo
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
   };
 
   const handleReset = () => {

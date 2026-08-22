@@ -1,7 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AlertTriangle, Calendar } from 'lucide-react';
 
 const ContradictionCard = ({ contradiction }) => {
+  const navigate = useNavigate();
   return (
     <div style={{ backgroundColor: '#fffbeb', border: '1px solid #fef3c7', borderRadius: '12px', overflow: 'hidden', marginBottom: '24px' }}>
       <div style={{ padding: '16px 24px', backgroundColor: '#fef3c7', borderBottom: '1px solid #fde68a', display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -35,7 +37,13 @@ const ContradictionCard = ({ contradiction }) => {
             <div style={{ fontSize: '14px', fontWeight: '500', color: '#92400e' }}>Status: {contradiction.status}</div>
             <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '4px' }}>Requires professional verification.</div>
           </div>
-          <button className="btn btn-outline" style={{ padding: '8px 16px', fontSize: '14px', borderColor: '#b45309', color: '#92400e' }}>View Details</button>
+          <button 
+            onClick={() => navigate(`/patient/contradictions/${contradiction.id}`)}
+            className="btn btn-outline" 
+            style={{ padding: '8px 16px', fontSize: '14px', borderColor: '#b45309', color: '#92400e' }}
+          >
+            View Details
+          </button>
         </div>
       </div>
     </div>

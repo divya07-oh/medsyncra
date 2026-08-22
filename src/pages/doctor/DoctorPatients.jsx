@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DoctorNavbar from '../../components/doctor/DoctorNavbar';
 import { mockPatients } from '../../data/doctorMockData';
-import { Search, User, FileText, AlertCircle } from 'lucide-react';
+import { Search, User, FileText, AlertCircle, UserPlus } from 'lucide-react';
+import RequestAccessModal from '../../components/doctor/RequestAccessModal';
 
 const DoctorPatients = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
+  const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem("doctorAuthenticated");
@@ -36,26 +38,36 @@ const DoctorPatients = () => {
           </div>
         </div>
 
-        <div style={{ marginBottom: '32px', maxWidth: '500px', position: 'relative' }}>
-          <div style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)', display: 'flex' }}>
-            <Search size={18} />
+        <div style={{ display: 'flex', gap: '16px', marginBottom: '32px', flexWrap: 'wrap' }}>
+          <div style={{ flex: 1, minWidth: '300px', position: 'relative' }}>
+            <div style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)', display: 'flex' }}>
+              <Search size={18} />
+            </div>
+            <input 
+              type="text" 
+              placeholder="Search by patient name or patient ID" 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{ 
+                width: '100%', 
+                padding: '14px 16px 14px 44px', 
+                borderRadius: '8px', 
+                border: '1px solid var(--border)',
+                outline: 'none',
+                fontSize: '15px',
+                color: 'var(--text-main)',
+                backgroundColor: 'var(--white)'
+              }}
+            />
           </div>
-          <input 
-            type="text" 
-            placeholder="Search by patient name or patient ID" 
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            style={{ 
-              width: '100%', 
-              padding: '14px 16px 14px 44px', 
-              borderRadius: '8px', 
-              border: '1px solid var(--border)',
-              outline: 'none',
-              fontSize: '15px',
-              color: 'var(--text-main)',
-              backgroundColor: 'var(--white)'
-            }}
-          />
+          
+          <button 
+            onClick={() => setIsRequestModalOpen(true)}
+            className="btn btn-secondary" 
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '14px 24px', backgroundColor: '#eff6ff', color: 'var(--main-blue)', border: '1px solid #bfdbfe', fontWeight: '500' }}
+          >
+            <UserPlus size={18} /> Request Access to New Patient
+          </button>
         </div>
 
         {filteredPatients.length === 0 ? (
@@ -115,6 +127,10 @@ const DoctorPatients = () => {
         )}
 
       </main>
+
+      {isRequestModalOpen && (
+        <RequestAccessModal onClose={() => setIsRequestModalOpen(false)} />
+      )}
     </div>
   );
 };

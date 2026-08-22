@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DoctorNavbar from '../../components/doctor/DoctorNavbar';
-import { doctorDashboardStats, mockReviews, mockVerificationHistory } from '../../data/doctorMockData';
+import { doctorDashboardStats, mockPatients, mockVerificationHistory } from '../../data/doctorMockData';
 import { Users, AlertTriangle, FileCheck, Activity } from 'lucide-react';
 
 const DoctorDashboard = () => {
@@ -77,69 +77,72 @@ const DoctorDashboard = () => {
             
             <div style={{ backgroundColor: 'var(--white)', borderRadius: '12px', border: '1px solid var(--border)', overflow: 'hidden' }}>
               
-              <div className="desktop-flex" style={{ display: 'grid', gridTemplateColumns: '1fr 2fr 1fr 1fr 1.5fr 1fr', gap: '16px', padding: '16px 24px', backgroundColor: '#f8fafc', borderBottom: '1px solid var(--border)', fontSize: '13px', fontWeight: '600', color: 'var(--text-secondary)' }}>
-                <div>Patient</div>
+              <div className="desktop-flex" style={{ display: 'grid', gridTemplateColumns: '1fr 2fr 1fr 1fr 1fr 1fr', gap: '16px', padding: '16px 24px', backgroundColor: '#f8fafc', borderBottom: '1px solid var(--border)', fontSize: '13px', fontWeight: '600', color: 'var(--text-secondary)' }}>
+                <div>Patient ID</div>
+                <div>Patient Name</div>
                 <div>Issue</div>
-                <div>Priority</div>
-                <div>Date</div>
+                <div>Severity</div>
                 <div>Status</div>
                 <div>Action</div>
               </div>
               
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                {mockReviews.map((review, idx) => (
-                  <div key={review.id} style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '12px', padding: '20px', borderBottom: idx !== mockReviews.length - 1 ? '1px solid var(--border)' : 'none' }} className="desktop-flex-row">
-                    
-                    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                      <span className="desktop-hidden" style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>Patient</span>
-                      <span style={{ fontSize: '14px', fontWeight: '600', color: 'var(--dark-blue)' }}>{review.patientId}</span>
-                    </div>
-                    
-                    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                      <span className="desktop-hidden" style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>Issue</span>
-                      <span style={{ fontSize: '14px', color: 'var(--text-main)' }}>{review.field} Information</span>
-                    </div>
-                    
-                    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                      <span className="desktop-hidden" style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>Priority</span>
-                      <span style={{ display: 'inline-block', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', width: 'fit-content',
-                        backgroundColor: review.priority === 'High' ? '#fef2f2' : '#fff7ed',
-                        color: review.priority === 'High' ? '#ef4444' : '#ea580c'
-                      }}>
-                        {review.priority}
-                      </span>
-                    </div>
-                    
-                    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                      <span className="desktop-hidden" style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>Date</span>
-                      <span style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>{review.date}</span>
-                    </div>
-                    
-                    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                      <span className="desktop-hidden" style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>Status</span>
-                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: '#ea580c', fontWeight: '500' }}>
-                        <Activity size={14} /> {review.status}
-                      </span>
-                    </div>
-                    
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <button 
-                        onClick={() => navigate(`/doctor/reviews/${review.id}`)}
-                        className="btn btn-primary" 
-                        style={{ padding: '8px 16px', fontSize: '13px', width: '100%' }}
-                      >
-                        Review
-                      </button>
-                    </div>
-
+                {mockPatients.length === 0 ? (
+                  <div style={{ padding: '32px', textAlign: 'center', color: 'var(--text-secondary)' }}>
+                    No patients require review at this time.
                   </div>
-                ))}
+                ) : (
+                  mockPatients.map((patient, idx) => (
+                    <div key={patient.id} style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '12px', padding: '20px', borderBottom: idx !== mockPatients.length - 1 ? '1px solid var(--border)' : 'none' }} className="desktop-flex-row">
+                      
+                      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                        <span className="desktop-hidden" style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>Patient ID</span>
+                        <span style={{ fontSize: '14px', fontWeight: '600', color: 'var(--dark-blue)' }}>{patient.id}</span>
+                      </div>
+                      
+                      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                        <span className="desktop-hidden" style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>Patient Name</span>
+                        <span style={{ fontSize: '14px', color: 'var(--text-main)' }}>{patient.name}</span>
+                      </div>
+                      
+                      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                        <span className="desktop-hidden" style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>Issue</span>
+                        <span style={{ fontSize: '14px', color: 'var(--text-main)' }}>Potential Contradiction</span>
+                      </div>
+
+                      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                        <span className="desktop-hidden" style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>Severity</span>
+                        <span style={{ display: 'inline-block', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', width: 'fit-content', backgroundColor: '#fef2f2', color: '#ef4444' }}>
+                          High
+                        </span>
+                      </div>
+                      
+                      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                        <span className="desktop-hidden" style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>Status</span>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: '#ea580c', fontWeight: '500' }}>
+                          <Activity size={14} /> Review
+                        </span>
+                      </div>
+                      
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <button 
+                          onClick={() => navigate(`/doctor/patients/${patient.id}/records`)}
+                          className="btn btn-primary" 
+                          style={{ padding: '8px 16px', fontSize: '13px', width: '100%' }}
+                        >
+                          Review
+                        </button>
+                      </div>
+
+                    </div>
+                  ))
+                )}
               </div>
             </div>
             <style dangerouslySetInnerHTML={{__html: `
               @media (min-width: 768px) {
                 .desktop-flex-row {
-                  grid-template-columns: 1fr 2fr 1fr 1fr 1.5fr 1fr !important;
+                  grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr !important;
                   padding: 16px 24px !important;
                 }
               }

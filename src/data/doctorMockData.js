@@ -71,7 +71,25 @@ export const mockReviews = [
 ];
 
 export const mockVerificationHistory = [
-  { id: "VH-01", patientId: "PT-001", issue: "Asthma Diagnosis", status: "Verified", verifiedBy: "Dr. Arun Kumar", date: "21 Aug 2026", icon: "✓" },
-  { id: "VH-02", patientId: "PT-002", issue: "Surgical History", status: "Needs More Information", verifiedBy: "Dr. Arun Kumar", date: "20 Aug 2026", icon: "ℹ" },
-  { id: "VH-03", patientId: "PT-004", issue: "Dietary Restrictions", status: "Not a Contradiction", verifiedBy: "Dr. Arun Kumar", date: "19 Aug 2026", icon: "○" }
+  { id: "VH-01", patientId: "PT-001", issue: "Asthma Diagnosis", status: "Verified", verifiedBy: "Dr. Arun Kumar", date: "21 Aug 2026", icon: "✓", decision: "Record A Verified" },
+  { id: "VH-02", patientId: "PT-002", issue: "Surgical History", status: "Needs More Information", verifiedBy: "Dr. Arun Kumar", date: "20 Aug 2026", icon: "ℹ", decision: "Needs More Information" },
+  { id: "VH-03", patientId: "PT-004", issue: "Dietary Restrictions", status: "Verified", verifiedBy: "Dr. Arun Kumar", date: "19 Aug 2026", icon: "✓", decision: "Record B Verified" }
 ];
+
+export const addVerificationRecord = (record) => {
+  const newRecord = {
+    id: `VH-${Math.floor(Math.random() * 1000)}`,
+    patientId: record.patientId,
+    issue: record.field || "Contradiction Resolution",
+    decision: record.decision === "record_a" ? "Record A Verified" : record.decision === "record_b" ? "Record B Verified" : "Needs More Information",
+    status: record.status === "verified" ? "Verified" : "Needs More Information",
+    verifiedBy: record.doctorId || "Dr. Arun Kumar",
+    date: record.verifiedAt || new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+    icon: record.status === "verified" ? "✓" : "ℹ"
+  };
+  mockVerificationHistory.unshift(newRecord);
+};
+
+export const hasVerificationRecord = (reviewId) => {
+  return mockVerificationHistory.some(record => record.reviewId === reviewId);
+};

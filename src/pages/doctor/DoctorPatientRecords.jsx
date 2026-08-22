@@ -1,12 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import DoctorNavbar from '../../components/doctor/DoctorNavbar';
 import { mockPatients, mockPatientRecords } from '../../data/doctorMockData';
 import { ArrowLeft, FileText, Calendar, User, Eye, Layers } from 'lucide-react';
+import MedicalRecordAnalysis from '../../components/doctor/MedicalRecordAnalysis';
+import { analyzeMedicalRecords } from '../../services/medicalRecordAnalysis';
 
 const DoctorPatientRecords = () => {
   const navigate = useNavigate();
   const { patientId } = useParams();
+  
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState(null);
+  const [analysisError, setAnalysisError] = useState('');
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem("doctorAuthenticated");
@@ -18,6 +24,26 @@ const DoctorPatientRecords = () => {
   const patient = mockPatients.find(p => p.id === patientId);
   // Simulating fetching records by patientId
   const records = mockPatientRecords.filter(r => r.patientId === patientId);
+
+  const handleAnalyzeRecords = async () => {
+    if (!records || records.length === 0) {
+      setAnalysisError("No medical records available for analysis.");
+      return;
+    }
+
+    setIsAnalyzing(true);
+    setAnalysisError('');
+    setAnalysisResult(null);
+
+    try {
+      const result = await analyzeMedicalRecords(patientId, records);
+      setAnalysisResult(result);
+    } catch (err) {
+      setAnalysisError(err.message || 'Unable to analyze records. Please try again.');
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
 
   if (!patient) {
     return (
@@ -50,12 +76,22 @@ const DoctorPatientRecords = () => {
             <p style={{ color: 'var(--text-secondary)', fontSize: '15px' }}>{patient.id} • Medical Records</p>
           </div>
           
-          <button 
-            className="btn btn-primary" 
-            onClick={() => navigate('/doctor/records/add')}
-          >
-            + Add Medical Record
-          </button>
+          <div style={{ display: 'flex', gap: '12px' }}>
+            <button 
+              className="btn btn-secondary" 
+              onClick={handleAnalyzeRecords}
+              disabled={isAnalyzing}
+              style={{ backgroundColor: '#f8fafc', color: 'var(--main-blue)', border: '1px solid var(--border)', fontWeight: '600', opacity: isAnalyzing ? 0.7 : 1, cursor: isAnalyzing ? 'not-allowed' : 'pointer' }}
+            >
+              {isAnalyzing ? 'Analyzing...' : 'Analyze Records'}
+            </button>
+            <button 
+              className="btn btn-primary" 
+              onClick={() => navigate('/doctor/records/add')}
+            >
+              + Add Medical Record
+            </button>
+          </div>
         </div>
 
         {records.length === 0 ? (
@@ -93,17 +129,29 @@ const DoctorPatientRecords = () => {
                 </div>
 
                 <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
-                  <button className="btn btn-outline" style={{ flex: 1, padding: '8px', fontSize: '13px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px' }}>
+                  <button 
+                    onClick={() => alert(`Viewing document: ${record.fileName}`)}
+                    className="btn btn-outline" 
+                    style={{ flex: 1, padding: '8px', fontSize: '13px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px' }}
+                  >
                     <Eye size={16} /> View
-                  </button>
-                  <button className="btn btn-secondary" style={{ flex: 1, padding: '8px', fontSize: '13px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px' }}>
-                    <Layers size={16} /> Compare
                   </button>
                 </div>
 
               </div>
             ))}
           </div>
+        )}
+
+        {/* GLM Analysis Section */}
+        {(isAnalyzing || analysisError || analysisResult) && (
+          <MedicalRecordAnalysis 
+            analysisResult={analysisResult} 
+            isLoading={isAnalyzing} 
+            error={analysisError} 
+            onRetry={handleAnalyzeRecords}
+            patientId={patientId}
+          />
         )}
 
       </main>

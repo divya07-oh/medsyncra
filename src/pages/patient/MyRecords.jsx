@@ -27,6 +27,14 @@ const MyRecords = () => {
     const savedRecordsStr = localStorage.getItem("patientRecords");
     if (savedRecordsStr) {
       setRecords(JSON.parse(savedRecordsStr));
+    } else {
+      // Use mock default records if none in localStorage
+      import('../../data/patientMockData').then(({ medicalRecords }) => {
+        if (medicalRecords && medicalRecords.length > 0) {
+          setRecords(medicalRecords);
+          localStorage.setItem("patientRecords", JSON.stringify(medicalRecords));
+        }
+      });
     }
   }, [navigate]);
 

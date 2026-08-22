@@ -28,7 +28,7 @@ const DoctorVerificationHistory = () => {
           
           <div className="desktop-flex" style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr 1.5fr 1.5fr 1fr', gap: '16px', padding: '16px 24px', backgroundColor: '#f8fafc', borderBottom: '1px solid var(--border)', fontSize: '13px', fontWeight: '600', color: 'var(--text-secondary)' }}>
             <div>Patient</div>
-            <div>Issue</div>
+            <div>Decision</div>
             <div>Status</div>
             <div>Verified By</div>
             <div>Date</div>
@@ -49,8 +49,8 @@ const DoctorVerificationHistory = () => {
                   </div>
                   
                   <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                    <span className="desktop-hidden" style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>Issue</span>
-                    <span style={{ fontSize: '14px', color: 'var(--text-main)' }}>{item.issue}</span>
+                    <span className="desktop-hidden" style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>Decision</span>
+                    <span style={{ fontSize: '14px', color: 'var(--text-main)', fontWeight: '500' }}>{item.decision}</span>
                   </div>
                   
                   <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>

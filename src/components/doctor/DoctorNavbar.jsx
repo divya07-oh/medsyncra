@@ -10,7 +10,7 @@ const DoctorNavbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("doctorAuthenticated");
-    navigate('/doctor/login');
+    navigate('/');
   };
   
   const toggleMenu = () => {
