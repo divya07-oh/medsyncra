@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import DoctorNavbar from '../../components/doctor/DoctorNavbar';
 import { mockPatients, mockPatientRecords } from '../../data/doctorMockData';
 import { ArrowLeft, FileText, Calendar, User, Eye, Layers } from 'lucide-react';
 import MedicalRecordAnalysis from '../../components/doctor/MedicalRecordAnalysis';
 import { analyzeMedicalRecords } from '../../services/medicalRecordAnalysis';
+import { updateAnalysisRequestStatus } from '../../data/mockDataStore';
 
 const DoctorPatientRecords = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { patientId } = useParams();
+  const requestId = location.state?.requestId;
   
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState(null);
@@ -36,8 +39,14 @@ const DoctorPatientRecords = () => {
     setAnalysisResult(null);
 
     try {
+      if (requestId) {
+        updateAnalysisRequestStatus(requestId, 'analyzing');
+      }
       const result = await analyzeMedicalRecords(patientId, records);
       setAnalysisResult(result);
+      if (requestId) {
+        updateAnalysisRequestStatus(requestId, 'completed');
+      }
     } catch (err) {
       setAnalysisError(err.message || 'Unable to analyze records. Please try again.');
     } finally {

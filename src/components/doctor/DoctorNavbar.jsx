@@ -42,6 +42,8 @@ const DoctorNavbar = () => {
           <div style={{ display: 'none', gap: '8px' }} className="desktop-flex">
             <button onClick={() => navigate('/doctor/dashboard')} style={navLinkStyle('/doctor/dashboard')}>Dashboard</button>
             <button onClick={() => navigate('/doctor/patients')} style={navLinkStyle('/doctor/patients')}>Patients</button>
+            <button onClick={() => navigate('/doctor/analysis-requests')} style={navLinkStyle('/doctor/analysis-requests')}>Analysis Requests</button>
+            <button onClick={() => navigate('/doctor/access-requests')} style={navLinkStyle('/doctor/access-requests')}>Access Requests</button>
             <button onClick={() => navigate('/doctor/verification-history')} style={navLinkStyle('/doctor/verification-history')}>Verification History</button>
           </div>
         </div>
@@ -89,6 +91,8 @@ const DoctorNavbar = () => {
         
         <button onClick={() => { closeMenu(); navigate('/doctor/dashboard'); }} style={{ ...navLinkStyle('/doctor/dashboard'), textAlign: 'left', padding: '12px' }}>Dashboard</button>
         <button onClick={() => { closeMenu(); navigate('/doctor/patients'); }} style={{ ...navLinkStyle('/doctor/patients'), textAlign: 'left', padding: '12px' }}>Patients</button>
+        <button onClick={() => { closeMenu(); navigate('/doctor/analysis-requests'); }} style={{ ...navLinkStyle('/doctor/analysis-requests'), textAlign: 'left', padding: '12px' }}>Analysis Requests</button>
+        <button onClick={() => { closeMenu(); navigate('/doctor/access-requests'); }} style={{ ...navLinkStyle('/doctor/access-requests'), textAlign: 'left', padding: '12px' }}>Access Requests</button>
         <button onClick={() => { closeMenu(); navigate('/doctor/verification-history'); }} style={{ ...navLinkStyle('/doctor/verification-history'), textAlign: 'left', padding: '12px' }}>Verification History</button>
         
         <button onClick={() => { closeMenu(); handleLogout(); }} style={{ textAlign: 'left', padding: '12px', background: 'none', border: 'none', color: '#ef4444', fontSize: '14px', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '8px' }}>

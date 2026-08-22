@@ -2,9 +2,11 @@
 // Do NOT expose this as a real authentication system.
 
 export const mockPatient = {
-  mobile: "9876543210",
-  otp: "123456",
-  patientId: "PT-001" // Removed predefined profile fields
+  id: "MS-DEMO-1001",
+  name: "Arun Kumar",
+  password: "Password@123",
+  phone: "+91 9876543210",
+  email: "arun.kumar@example.com"
 };
 
 export const dashboardOverview = {

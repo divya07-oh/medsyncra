@@ -9,7 +9,9 @@ const DoctorLogin = () => {
     hospitalId: '',
     doctorId: '',
     medicalLicenceNumber: '',
-    password: ''
+    password: '',
+    specialization: 'General Medicine',
+    otherSpecialization: ''
   });
   
   const [showPassword, setShowPassword] = useState(false);
@@ -43,6 +45,8 @@ const DoctorLogin = () => {
       setError('');
       
       localStorage.setItem("doctorAuthenticated", "true");
+      const finalSpecialization = formData.specialization === 'Other' ? formData.otherSpecialization : formData.specialization;
+      localStorage.setItem("doctorSpecialization", finalSpecialization);
       
       setTimeout(() => {
         navigate('/doctor/details');
@@ -110,6 +114,32 @@ const DoctorLogin = () => {
               <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500', color: 'var(--text-main)' }}>Medical Licence Number</label>
               <input type="text" name="medicalLicenceNumber" value={formData.medicalLicenceNumber} onChange={handleChange} placeholder="e.g. LIC-001" style={inputStyle} />
             </div>
+
+            <div>
+              <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500', color: 'var(--text-main)' }}>Specialization</label>
+              <select name="specialization" value={formData.specialization} onChange={handleChange} style={inputStyle}>
+                <option value="General Medicine">General Medicine</option>
+                <option value="Cardiology">Cardiology</option>
+                <option value="Neurology">Neurology</option>
+                <option value="Orthopedics">Orthopedics</option>
+                <option value="Pediatrics">Pediatrics</option>
+                <option value="Dermatology">Dermatology</option>
+                <option value="Psychiatry">Psychiatry</option>
+                <option value="Gynecology">Gynecology</option>
+                <option value="Oncology">Oncology</option>
+                <option value="Endocrinology">Endocrinology</option>
+                <option value="Pulmonology">Pulmonology</option>
+                <option value="Gastroenterology">Gastroenterology</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            {formData.specialization === 'Other' && (
+              <div>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500', color: 'var(--text-main)' }}>Enter Specialization</label>
+                <input type="text" name="otherSpecialization" value={formData.otherSpecialization} onChange={handleChange} placeholder="e.g. Immunologist" style={inputStyle} />
+              </div>
+            )}
 
             <div>
               <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500', color: 'var(--text-main)' }}>Password</label>

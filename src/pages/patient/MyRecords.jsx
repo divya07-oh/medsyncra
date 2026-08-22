@@ -3,13 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import PatientNavbar from '../../components/patient/PatientNavbar';
 import RecordCard from '../../components/patient/RecordCard';
 import UploadRecordModal from '../../components/patient/UploadRecordModal';
-import { Search, Plus } from 'lucide-react';
+import RequestAnalysisModal from '../../components/patient/RequestAnalysisModal';
+import { Search, Plus, Stethoscope } from 'lucide-react';
 
 const MyRecords = () => {
   const navigate = useNavigate();
   const [records, setRecords] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [isAnalysisModalOpen, setIsAnalysisModalOpen] = useState(false);
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem("patientAuthenticated");
@@ -72,14 +74,22 @@ const MyRecords = () => {
             <h1 style={{ fontSize: '32px', color: 'var(--dark-blue)', marginBottom: '8px' }}>My Medical Records</h1>
             <p style={{ color: 'var(--text-secondary)', fontSize: '16px' }}>Upload and manage your medical records in one place.</p>
           </div>
-          
-          <button 
-            className="btn btn-primary" 
-            onClick={() => setIsUploadModalOpen(true)}
-            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 24px' }}
-          >
-            <Plus size={18} /> Upload Record
-          </button>
+          <div style={{ display: 'flex', gap: '12px' }}>
+            <button 
+              className="btn btn-secondary" 
+              onClick={() => setIsAnalysisModalOpen(true)}
+              style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 24px', backgroundColor: '#eff6ff', color: 'var(--main-blue)', border: '1px solid #bfdbfe', fontWeight: '500' }}
+            >
+              <Stethoscope size={18} /> Request Doctor Analysis
+            </button>
+            <button 
+              className="btn btn-primary" 
+              onClick={() => setIsUploadModalOpen(true)}
+              style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 24px' }}
+            >
+              <Plus size={18} /> Upload Record
+            </button>
+          </div>
         </div>
 
         {records.length > 0 && (
@@ -144,6 +154,13 @@ const MyRecords = () => {
         <UploadRecordModal 
           onClose={() => setIsUploadModalOpen(false)} 
           onUpload={handleUpload} 
+        />
+      )}
+
+      {isAnalysisModalOpen && (
+        <RequestAnalysisModal 
+          onClose={() => setIsAnalysisModalOpen(false)} 
+          availableRecords={records}
         />
       )}
     </div>

@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Logo from '../Logo';
 import { LogOut } from 'lucide-react';
+import MedicationToast from './MedicationToast';
 
 const PatientNavbar = () => {
   const navigate = useNavigate();
@@ -32,6 +33,24 @@ const PatientNavbar = () => {
             >
               My Records
             </button>
+            <button 
+              onClick={() => navigate('/patient/analysis-requests')} 
+              style={{ background: 'none', border: 'none', fontSize: '15px', fontWeight: '500', cursor: 'pointer', color: location.pathname === '/patient/analysis-requests' ? 'var(--main-blue)' : 'var(--text-secondary)' }}
+            >
+              Analysis Requests
+            </button>
+            <button 
+              onClick={() => navigate('/patient/reminders')} 
+              style={{ background: 'none', border: 'none', fontSize: '15px', fontWeight: '500', cursor: 'pointer', color: location.pathname === '/patient/reminders' ? 'var(--main-blue)' : 'var(--text-secondary)' }}
+            >
+              Medication Reminders
+            </button>
+            <button 
+              onClick={() => navigate('/patient/notifications')} 
+              style={{ background: 'none', border: 'none', fontSize: '15px', fontWeight: '500', cursor: 'pointer', color: location.pathname === '/patient/notifications' ? 'var(--main-blue)' : 'var(--text-secondary)' }}
+            >
+              Notifications
+            </button>
           </div>
         </div>
         
@@ -48,6 +67,7 @@ const PatientNavbar = () => {
           </button>
         </div>
       </div>
+      <MedicationToast />
     </nav>
   );
 };

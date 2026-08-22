@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { UserPlus, Search, ShieldAlert, CheckCircle } from 'lucide-react';
+import { addAccessRequest } from '../../data/mockDataStore';
+import { mockDoctor, mockDoctorsList } from '../../data/doctorMockData';
 
 const RequestAccessModal = ({ onClose }) => {
   const [patientId, setPatientId] = useState('');
@@ -8,9 +10,10 @@ const RequestAccessModal = ({ onClose }) => {
 
   // Mock patient data for the request flow
   const mockExternalPatient = {
-    id: "PT-009",
+    id: patientId || "PT-009",
     name: "Arjun T",
-    primaryDoctor: "Dr. Sarah Smith",
+    primaryDoctorId: "DOC-002",
+    primaryDoctor: mockDoctorsList.find(d => d.id === "DOC-002")?.name || "Dr. Sarah Smith",
     hospital: "Care General Hospital"
   };
 
@@ -26,6 +29,16 @@ const RequestAccessModal = ({ onClose }) => {
   const handleRequest = () => {
     setIsLoading(true);
     setTimeout(() => {
+      addAccessRequest({
+        id: `access-${Math.floor(Math.random() * 1000)}`,
+        patientId: mockExternalPatient.id,
+        requestingDoctorId: mockDoctor.doctorId,
+        receivingDoctorId: mockExternalPatient.primaryDoctorId,
+        hospital: mockExternalPatient.hospital,
+        reason: "Need access to review previous medical records",
+        createdAt: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+        status: "pending"
+      });
       setIsLoading(false);
       setStep(3);
     }, 1500);

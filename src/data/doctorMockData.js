@@ -1,20 +1,47 @@
 // Mock data for doctor authentication prototype only.
-export const mockDoctor = {
-  hospitalId: "HOSP-001",
-  doctorId: "DOC-001",
-  medicalLicenceNumber: "LIC-001",
-  password: "Doctor@123",
-  
-  profile: {
-    name: "Dr. Arun Kumar",
-    doctorId: "DOC-001",
-    hospital: "City Care Hospital",
+export const mockDoctors = [
+  {
     hospitalId: "HOSP-001",
+    doctorId: "DOC-001",
     medicalLicenceNumber: "LIC-001",
-    specialization: "General Medicine",
-    status: "Authorized for Demo"
+    password: "Doctor@123",
+
+    profile: {
+      name: "Dr. Arun Kumar",
+      doctorId: "DOC-001",
+      hospital: "City Care Hospital",
+      hospitalId: "HOSP-001",
+      medicalLicenceNumber: "LIC-001",
+      specialization: "General Medicine",
+      status: "Authorized for Demo"
+    }
+  },
+
+  {
+    hospitalId: "HOSP-002",
+    doctorId: "DOC-002",
+    medicalLicenceNumber: "LIC-002",
+    password: "Doctor@456",
+
+    profile: {
+      name: "Dr. Priya Sharma",
+      doctorId: "DOC-002",
+      hospital: "Green Valley Hospital",
+      hospitalId: "HOSP-002",
+      medicalLicenceNumber: "LIC-002",
+      specialization: "Cardiology",
+      status: "Authorized for Demo"
+    }
   }
-};
+];
+
+export const mockDoctorsList = [
+  { id: "DOC-001", name: "Dr. Arun Kumar", specialization: "General Medicine", hospital: "City Care Hospital" },
+  { id: "DOC-002", name: "Dr. Sarah Smith", specialization: "General Medicine", hospital: "Care General Hospital" },
+  { id: "DOC-003", name: "Dr. Priya Sharma", specialization: "Cardiology", hospital: "Green Valley Hospital" },
+  { id: "DOC-004", name: "Dr. Rahul Menon", specialization: "General Medicine", hospital: "City Care Medical Center" },
+  { id: "DOC-005", name: "Dr. Anil Rao", specialization: "Endocrinology", hospital: "Sunrise Clinic" }
+];
 
 export const doctorDashboardStats = {
   authorizedPatients: 12,

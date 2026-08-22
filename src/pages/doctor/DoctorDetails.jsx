@@ -56,7 +56,7 @@ const DoctorDetails = () => {
             
             <div>
               <span style={{ display: 'block', fontSize: '13px', color: 'var(--text-secondary)', fontWeight: '500', marginBottom: '4px' }}>Specialization</span>
-              <span style={{ fontSize: '16px', color: 'var(--text-main)', fontWeight: '600' }}>{profile.specialization}</span>
+              <span style={{ fontSize: '16px', color: 'var(--text-main)', fontWeight: '600' }}>{localStorage.getItem('doctorSpecialization') || profile.specialization}</span>
             </div>
             
             <div style={{ gridColumn: '1 / -1', padding: '16px', backgroundColor: '#f0fdf4', borderRadius: '8px', border: '1px solid #bbf7d0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>

@@ -8,11 +8,19 @@ import MedicalTimeline from '../../components/patient/MedicalTimeline';
 import VerificationStatus from '../../components/patient/VerificationStatus';
 import { mockPatient, dashboardOverview, contradictions, medicalTimeline as timelineData, reviewedItems } from '../../data/patientMockData';
 import { Edit, ChevronRight } from 'lucide-react';
+import { getAnalysisRequests, getMedications, getNotifications } from '../../data/mockDataStore';
 
 const PatientDashboard = () => {
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [records, setRecords] = useState([]);
+  const [stats, setStats] = useState({
+    totalRecords: 0,
+    analysisRequests: 0,
+    potentialContradictions: 2, // Hardcoded for demo
+    medicationReminders: 0,
+    notifications: 0
+  });
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem("patientAuthenticated");
@@ -30,17 +38,35 @@ const PatientDashboard = () => {
     setProfile(JSON.parse(savedProfileStr));
 
     const savedRecordsStr = localStorage.getItem("patientRecords");
+    let currentRecords = [];
     if (savedRecordsStr) {
-      setRecords(JSON.parse(savedRecordsStr));
+      currentRecords = JSON.parse(savedRecordsStr);
+      setRecords(currentRecords);
     } else {
       // Use mock default records if none in localStorage
       import('../../data/patientMockData').then(({ medicalRecords }) => {
         if (medicalRecords && medicalRecords.length > 0) {
           setRecords(medicalRecords);
+          currentRecords = medicalRecords;
           localStorage.setItem("patientRecords", JSON.stringify(medicalRecords));
         }
       });
     }
+
+    // Load data from mockDataStore
+    const patientId = "MS-DEMO-1001";
+    const userAnalysisReqs = getAnalysisRequests().filter(r => r.patientId === patientId && r.status === 'pending');
+    const userMeds = getMedications().filter(m => m.patientId === patientId && m.status === 'Upcoming');
+    const userNotifs = getNotifications().filter(n => n.patientId === patientId && !n.read);
+    
+    setStats({
+      totalRecords: currentRecords.length || 3,
+      analysisRequests: userAnalysisReqs.length,
+      potentialContradictions: 2,
+      medicationReminders: userMeds.length,
+      notifications: userNotifs.length
+    });
+
   }, [navigate]);
 
   if (!profile) return null;
@@ -77,7 +103,7 @@ const PatientDashboard = () => {
 
         <section style={{ marginBottom: '64px' }}>
           <h2 style={{ fontSize: '20px', color: 'var(--text-main)', marginBottom: '24px', borderBottom: '1px solid var(--border)', paddingBottom: '12px' }}>OVERVIEW</h2>
-          <PatientOverview overview={dashboardOverview} />
+          <PatientOverview overview={stats} />
         </section>
 
         <section style={{ marginBottom: '64px' }}>

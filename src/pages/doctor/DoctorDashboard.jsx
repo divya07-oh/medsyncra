@@ -1,17 +1,35 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DoctorNavbar from '../../components/doctor/DoctorNavbar';
-import { doctorDashboardStats, mockPatients, mockVerificationHistory } from '../../data/doctorMockData';
-import { Users, AlertTriangle, FileCheck, Activity } from 'lucide-react';
+import { doctorDashboardStats, mockPatients, mockVerificationHistory, mockDoctor } from '../../data/doctorMockData';
+import { Users, AlertTriangle, FileCheck, Activity, Stethoscope, Shield } from 'lucide-react';
+import { getAnalysisRequests, getAccessRequests } from '../../data/mockDataStore';
 
 const DoctorDashboard = () => {
   const navigate = useNavigate();
+  const [stats, setStats] = React.useState({
+    authorizedPatients: doctorDashboardStats.authorizedPatients,
+    analysisRequests: 0,
+    accessRequests: 0,
+    potentialContradictions: doctorDashboardStats.potentialContradictions
+  });
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem("doctorAuthenticated");
     if (isAuthenticated !== "true") {
       navigate('/doctor/login');
+      return;
     }
+
+    const docId = mockDoctor.doctorId;
+    const analysisReqs = getAnalysisRequests().filter(r => r.doctorId === docId && r.status === 'pending');
+    const accessReqs = getAccessRequests().filter(r => r.receivingDoctorId === docId && r.status === 'pending');
+
+    setStats(prev => ({
+      ...prev,
+      analysisRequests: analysisReqs.length,
+      accessRequests: accessReqs.length
+    }));
   }, [navigate]);
 
   return (
@@ -33,18 +51,28 @@ const DoctorDashboard = () => {
               <Users size={24} />
             </div>
             <div>
-              <div style={{ fontSize: '24px', fontWeight: '700', color: 'var(--dark-blue)' }}>{doctorDashboardStats.authorizedPatients}</div>
+              <div style={{ fontSize: '24px', fontWeight: '700', color: 'var(--dark-blue)' }}>{stats.authorizedPatients}</div>
               <div style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Authorized Patients</div>
             </div>
           </div>
           
           <div style={{ backgroundColor: 'var(--white)', padding: '24px', borderRadius: '12px', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <div style={{ width: '48px', height: '48px', borderRadius: '12px', backgroundColor: '#fff7ed', color: '#ea580c', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Activity size={24} />
+            <div style={{ width: '48px', height: '48px', borderRadius: '12px', backgroundColor: '#eff6ff', color: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Stethoscope size={24} />
             </div>
             <div>
-              <div style={{ fontSize: '24px', fontWeight: '700', color: 'var(--dark-blue)' }}>{doctorDashboardStats.pendingReviews}</div>
-              <div style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Pending Reviews</div>
+              <div style={{ fontSize: '24px', fontWeight: '700', color: 'var(--dark-blue)' }}>{stats.analysisRequests}</div>
+              <div style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Analysis Requests</div>
+            </div>
+          </div>
+          
+          <div style={{ backgroundColor: 'var(--white)', padding: '24px', borderRadius: '12px', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ width: '48px', height: '48px', borderRadius: '12px', backgroundColor: '#fdf4ff', color: '#c026d3', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Shield size={24} />
+            </div>
+            <div>
+              <div style={{ fontSize: '24px', fontWeight: '700', color: 'var(--dark-blue)' }}>{stats.accessRequests}</div>
+              <div style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Access Requests</div>
             </div>
           </div>
           
@@ -53,18 +81,8 @@ const DoctorDashboard = () => {
               <AlertTriangle size={24} />
             </div>
             <div>
-              <div style={{ fontSize: '24px', fontWeight: '700', color: 'var(--dark-blue)' }}>{doctorDashboardStats.potentialContradictions}</div>
+              <div style={{ fontSize: '24px', fontWeight: '700', color: 'var(--dark-blue)' }}>{stats.potentialContradictions}</div>
               <div style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Potential Contradictions</div>
-            </div>
-          </div>
-          
-          <div style={{ backgroundColor: 'var(--white)', padding: '24px', borderRadius: '12px', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <div style={{ width: '48px', height: '48px', borderRadius: '12px', backgroundColor: '#f0fdf4', color: '#16a34a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <FileCheck size={24} />
-            </div>
-            <div>
-              <div style={{ fontSize: '24px', fontWeight: '700', color: 'var(--dark-blue)' }}>{doctorDashboardStats.completedReviews}</div>
-              <div style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Completed Reviews</div>
             </div>
           </div>
 
