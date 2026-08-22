@@ -15,25 +15,10 @@ export const mockDoctors = [
       specialization: "General Medicine",
       status: "Authorized for Demo"
     }
-  },
-
-  {
-    hospitalId: "HOSP-002",
-    doctorId: "DOC-002",
-    medicalLicenceNumber: "LIC-002",
-    password: "Doctor@456",
-
-    profile: {
-      name: "Dr. Priya Sharma",
-      doctorId: "DOC-002",
-      hospital: "Green Valley Hospital",
-      hospitalId: "HOSP-002",
-      medicalLicenceNumber: "LIC-002",
-      specialization: "Cardiology",
-      status: "Authorized for Demo"
-    }
   }
 ];
+
+export const mockDoctor = mockDoctors[0];
 
 export const mockDoctorsList = [
   { id: "DOC-001", name: "Dr. Arun Kumar", specialization: "General Medicine", hospital: "City Care Hospital" },
